@@ -35,9 +35,9 @@ export default {
           password: this.password,
         });
         this.$store.dispatch('login', response.data.token);
-        //this.$router.push('/Dashboard');
-        if (this.$route.path !== '/Dashboard') {
-          this.$router.push('/Dashboard');
+        //this.$router.push('/dashboard');
+        if (this.$route.path !== '/dashboard') {
+          this.$router.push('/dashboard');
         }
 
       } catch (error) {
