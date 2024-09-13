@@ -32,17 +32,17 @@
       </div>
       <div>
         <label for="section">Section:</label>
-        <input type="text" id="section" v-model="section" required pattern="\d{3}" />
+        <input type="text" id="section" v-model="section" required />
         <span v-if="!isSectionValid">Section must be exactly 3 digits.</span>
       </div>
       <div>
         <label for="township">Township:</label>
-        <input type="text" id="township" v-model="township" required pattern="\d{3}[NS]" />
+        <input type="text" id="township" v-model="township" required />
         <span v-if="!isTownshipValid">Township must be 3 digits followed by "N" or "S".</span>
       </div>
       <div>
         <label for="range">Range:</label>
-        <input type="text" id="range" v-model="range" required pattern="\d{3}[EW]" />
+        <input type="text" id="range" v-model="range" required />
         <span v-if="!isRangeValid">Range must be 3 digits followed by "E" or "W".</span>
       </div>
       <div>
@@ -66,8 +66,8 @@ export default {
   name: 'OwnerDetails',
   data() {
     return {
-      owner: {}, // Initialize as empty object
-      landHoldings: [], // Initialize as empty array
+      owner: {},
+      landHoldings: [],
       legalEntity: '',
       netMineralAcres: '',
       mineralOwnerRoyalty: '',
@@ -83,9 +83,10 @@ export default {
   async created() {
     try {
       const ownerId = this.$route.params.id;
-      
+      const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
       // Fetch the owner details
-      const ownerResponse = await axios.get(`http://localhost:5001/api/owners/${ownerId}`, {
+      const ownerResponse = await axios.get(`${apiUrl}/api/owners/${ownerId}`, {
         headers: {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
@@ -93,7 +94,7 @@ export default {
       this.owner = ownerResponse.data;
 
       // Fetch the land holdings for this owner
-      const holdingsResponse = await axios.get(`http://localhost:5001/api/landholdings?owner=${ownerId}`, {
+      const holdingsResponse = await axios.get(`${apiUrl}/api/landholdings?owner=${ownerId}`, {
         headers: {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
@@ -123,10 +124,12 @@ export default {
 
       try {
         const ownerId = this.$route.params.id;
+        const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
         const response = await axios.post(
-          'http://localhost:5001/api/landholdings',
+          `${apiUrl}/api/landholdings`,
           {
-            name: `${this.section}-${this.township}-${this.range}`, // Use a combination for name
+            name: `${this.section}-${this.township}-${this.range}`,
             owner: ownerId,
             legalEntity: this.legalEntity,
             netMineralAcres: this.netMineralAcres,
@@ -143,14 +146,7 @@ export default {
           }
         );
         this.landHoldings.push(response.data);
-        // Clear form fields after submission
-        this.legalEntity = '';
-        this.netMineralAcres = '';
-        this.mineralOwnerRoyalty = '';
-        this.section = '';
-        this.township = '';
-        this.range = '';
-        this.titleSource = '';
+        this.resetForm();
       } catch (error) {
         console.error('Failed to create land holding:', error);
         alert('Failed to create land holding.');
@@ -158,7 +154,9 @@ export default {
     },
     async deleteLandHolding(holdingId) {
       try {
-        await axios.delete(`http://localhost:5001/api/landholdings/${holdingId}`, {
+        const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+        await axios.delete(`${apiUrl}/api/landholdings/${holdingId}`, {
           headers: {
             Authorization: `Bearer ${this.$store.state.token}`,
           },
@@ -169,10 +167,22 @@ export default {
         alert('Failed to delete land holding.');
       }
     },
+    resetForm() {
+      this.legalEntity = '';
+      this.netMineralAcres = '';
+      this.mineralOwnerRoyalty = '';
+      this.section = '';
+      this.township = '';
+      this.range = '';
+      this.titleSource = '';
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Add your styles here */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+}
 </style>

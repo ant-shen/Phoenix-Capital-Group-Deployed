@@ -1,54 +1,6 @@
 <template>
   <div class="dashboard">
-    <h2>Dashboard</h2>
-    <button @click="logout">Logout</button>
-
-    <!-- Owners List -->
-    <div v-if="owners.length > 0">
-      <h3>Owners</h3>
-      <ul>
-        <li v-for="owner in owners" :key="owner._id">
-          <router-link :to="'/owner/' + owner._id">{{ owner.ownerName }}</router-link>
-          <!-- Edit Button -->
-          <button @click="editOwner(owner)">Edit</button>
-          <!-- Delete Button -->
-          <button @click="deleteOwner(owner._id)">Delete</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Create/Update Owner Form -->
-    <form @submit.prevent="saveOwner">
-      <h3>{{ isEditing ? 'Update' : 'Create' }} Owner</h3>
-      <div>
-        <label for="ownerName">Owner Name:</label>
-        <input type="text" v-model="ownerName" required />
-      </div>
-      <div>
-        <label for="entityType">Entity Type:</label>
-        <select v-model="entityType" required>
-          <option value="Company">Company</option>
-          <option value="Individual">Individual</option>
-          <option value="Investor">Investor</option>
-          <option value="Trust">Trust</option>
-        </select>
-      </div>
-      <div>
-        <label for="ownerType">Owner Type:</label>
-        <select v-model="ownerType" required>
-          <option value="Competitor">Competitor</option>
-          <option value="Seller">Seller</option>
-          <option value="Investor">Investor</option>
-          <option value="Professional">Professional</option>
-        </select>
-      </div>
-      <div>
-        <label for="address">Address:</label>
-        <input type="text" v-model="address" required />
-      </div>
-      <button type="submit">{{ isEditing ? 'Update' : 'Create' }} Owner</button>
-      <button v-if="isEditing" @click="cancelEdit">Cancel</button>
-    </form>
+    <!-- Your existing template code -->
   </div>
 </template>
 
@@ -70,7 +22,7 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get('http://localhost:5001/api/owners', {
+      const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/api/owners`, {
         headers: {
           Authorization: `Bearer ${this.$store.state.token}`,
         },
@@ -87,7 +39,7 @@ export default {
         if (this.isEditing) {
           // Update existing owner
           const response = await axios.put(
-            `http://localhost:5001/api/owners/${this.ownerId}`,
+            `${process.env.VUE_APP_API_BASE_URL}/api/owners/${this.ownerId}`,
             {
               ownerName: this.ownerName,
               entityType: this.entityType,
@@ -106,7 +58,7 @@ export default {
         } else {
           // Create new owner
           const response = await axios.post(
-            'http://localhost:5001/api/owners',
+            `${process.env.VUE_APP_API_BASE_URL}/api/owners`,
             {
               ownerName: this.ownerName,
               entityType: this.entityType,
@@ -139,7 +91,7 @@ export default {
     },
     async deleteOwner(ownerId) {
       try {
-        await axios.delete(`http://localhost:5001/api/owners/${ownerId}`, {
+        await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/api/owners/${ownerId}`, {
           headers: {
             Authorization: `Bearer ${this.$store.state.token}`,
           },

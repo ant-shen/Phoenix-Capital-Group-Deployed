@@ -71,16 +71,15 @@ export default {
     this.fetchLandHolding();
   },
   methods: {
-    fetchLandHolding() {
+    async fetchLandHolding() {
       const id = this.$route.params.id;
-      fetch(`/api/landholdings/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          this.landHolding = data;
-        })
-        .catch((error) => {
-          console.error('Error fetching land holding:', error);
-        });
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_BASE_URL}/api/landholdings/${id}`);
+        const data = await response.json();
+        this.landHolding = data;
+      } catch (error) {
+        console.error('Error fetching land holding:', error);
+      }
     },
     validateSection() {
       const sectionPattern = /^\d{3}$/;
@@ -100,7 +99,7 @@ export default {
     checkFormValidity() {
       this.isFormValid = this.isSectionValid && this.isTownshipValid && this.isRangeValid;
     },
-    updateLandHolding() {
+    async updateLandHolding() {
       if (!this.isFormValid) {
         alert('Please correct the form errors before submitting.');
         return;
@@ -113,23 +112,23 @@ export default {
       };
 
       const id = this.$route.params.id;
-      fetch(`/api/landholdings/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedLandHolding),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to update land holding');
-          }
-          this.$router.push('/landholding');
-        })
-        .catch((error) => {
-          console.error('Error updating land holding:', error);
-          alert('Failed to update land holding.');
+      try {
+        const response = await fetch(`${process.env.VUE_APP_API_BASE_URL}/api/landholdings/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedLandHolding),
         });
+
+        if (!response.ok) {
+          throw new Error('Failed to update land holding');
+        }
+        this.$router.push('/landholding');
+      } catch (error) {
+        console.error('Error updating land holding:', error);
+        alert('Failed to update land holding.');
+      }
     },
   },
 };
