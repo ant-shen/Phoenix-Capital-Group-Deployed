@@ -3,6 +3,22 @@
     <h2>Dashboard</h2>
     <button @click="logout">Logout</button>
 
+    <!-- Owners List -->
+    <div v-if="owners.length > 0">
+      <h3>Owners</h3>
+      <ul>
+        <li v-for="owner in owners" :key="owner._id">
+          <router-link :to="'/owner/' + owner._id">{{ owner.ownerName }}</router-link>
+          <button @click="editOwner(owner)">Edit</button>
+          <button @click="deleteOwner(owner._id)">Delete</button>
+          <!-- View Land Holdings Button -->
+          <router-link :to="'/landholdings/' + owner._id">
+            <button>View Land Holdings</button>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+
     <!-- Create/Update Owner Form -->
     <form @submit.prevent="saveOwner">
       <h3>{{ isEditing ? 'Update' : 'Create' }} Owner</h3>
@@ -35,24 +51,6 @@
       <button type="submit">{{ isEditing ? 'Update' : 'Create' }} Owner</button>
       <button v-if="isEditing" @click="cancelEdit">Cancel</button>
     </form>
-
-    <!-- Owners List -->
-    <div v-if="owners.length > 0">
-      <h3>Owners</h3>
-      <ul>
-        <li v-for="owner in owners" :key="owner._id">
-          <router-link :to="'/owner/' + owner._id">{{ owner.ownerName }}</router-link>
-          <!-- View Land Holdings Button -->
-          <router-link :to="'/landholdings/' + owner._id">
-            <button>View Land Holdings</button>
-          </router-link>
-          <!-- Edit Button -->
-          <button @click="editOwner(owner)">Edit</button>
-          <!-- Delete Button -->
-          <button @click="deleteOwner(owner._id)">Delete</button>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
@@ -69,7 +67,7 @@ export default {
       entityType: 'Company',
       ownerType: 'Competitor',
       address: '',
-      isEditing: false, // Track if we are in edit mode
+      isEditing: false,
     };
   },
   async created() {
@@ -89,7 +87,6 @@ export default {
     async saveOwner() {
       try {
         if (this.isEditing) {
-          // Update existing owner
           const response = await axios.put(
             `${process.env.VUE_APP_API_BASE_URL}/api/owners/${this.ownerId}`,
             {
@@ -104,11 +101,9 @@ export default {
               },
             }
           );
-          // Update owner in the list
           const index = this.owners.findIndex(owner => owner._id === this.ownerId);
           this.$set(this.owners, index, response.data);
         } else {
-          // Create new owner
           const response = await axios.post(
             `${process.env.VUE_APP_API_BASE_URL}/api/owners`,
             {
@@ -125,7 +120,6 @@ export default {
           );
           this.owners.push(response.data);
         }
-        // Clear form fields
         this.resetForm();
       } catch (error) {
         console.error(this.isEditing ? 'Failed to update owner' : 'Failed to create owner', error);
@@ -133,7 +127,6 @@ export default {
       }
     },
     editOwner(owner) {
-      // Populate the form with the selected owner's data
       this.ownerId = owner._id;
       this.ownerName = owner.ownerName;
       this.entityType = owner.entityType;
@@ -158,7 +151,6 @@ export default {
       this.resetForm();
     },
     resetForm() {
-      // Clear form fields
       this.ownerId = null;
       this.ownerName = '';
       this.entityType = 'Company';
@@ -176,10 +168,4 @@ export default {
 
 <style scoped>
 /* Add your styles here */
-.dashboard {
-  padding: 20px;
-}
-button {
-  margin-left: 10px;
-}
 </style>
