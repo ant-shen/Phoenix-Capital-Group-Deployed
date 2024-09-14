@@ -74,7 +74,11 @@ export default {
     async fetchLandHolding() {
       const id = this.$route.params.id;
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_BASE_URL}/api/landholdings/${id}`);
+        const response = await fetch(`${process.env.VUE_APP_API_BASE_URL}/api/landholdings/${id}`, {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.token}`,
+          },
+        });
         const data = await response.json();
         this.landHolding = data;
       } catch (error) {
@@ -117,6 +121,7 @@ export default {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.$store.state.token}`,
           },
           body: JSON.stringify(updatedLandHolding),
         });
@@ -124,7 +129,15 @@ export default {
         if (!response.ok) {
           throw new Error('Failed to update land holding');
         }
-        this.$router.push('/owner/${ownerId}');
+
+        // Navigate back to the owner's page
+        const ownerId = this.landHolding.ownerId; // Ensure ownerId is part of landHolding data
+        if (ownerId) {
+          this.$router.push(`/owner/${ownerId}`);
+        } else {
+          console.error('Owner ID is not available in landHolding data');
+          alert('Unable to navigate to the owner page. Owner ID is missing.');
+        }
       } catch (error) {
         console.error('Error updating land holding:', error);
         alert('Failed to update land holding.');
@@ -134,7 +147,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .error-message {
   color: red;
   font-size: 0.9em;
