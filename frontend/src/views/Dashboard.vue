@@ -12,7 +12,7 @@
           <button @click="editOwner(owner)">Edit</button>
           <button @click="deleteOwner(owner._id)">Delete</button>
           <!-- View Land Holdings Button -->
-          <router-link :to="'/landholdings/' + owner._id">
+          <router-link :to="'/owner/' + owner._id">
             <button>View Land Holdings</button>
           </router-link>
         </li>
