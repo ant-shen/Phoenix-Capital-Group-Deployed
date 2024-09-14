@@ -35,14 +35,9 @@ export default {
           password: this.password,
         });
 
-        // If the response contains a token, proceed to login and navigate to the dashboard
         if (response.data.token) {
           this.$store.dispatch('login', response.data.token);
-
-          // Set the Authorization header globally for subsequent requests
           axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-
-          // Navigate to the dashboard
           this.$router.push('/dashboard');
         }
       } catch (error) {
