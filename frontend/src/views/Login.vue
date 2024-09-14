@@ -34,12 +34,17 @@ export default {
           email: this.email,
           password: this.password,
         });
-        this.$store.dispatch('login', response.data.token);
-        //this.$router.push('/dashboard');
-        if (this.$route.path !== '/dashboard') {
+
+        // If the response contains a token, proceed to login and navigate to the dashboard
+        if (response.data.token) {
+          this.$store.dispatch('login', response.data.token);
+
+          // Set the Authorization header globally for subsequent requests
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+
+          // Navigate to the dashboard
           this.$router.push('/dashboard');
         }
-
       } catch (error) {
         console.error('Login failed:', error);
         alert('Login failed. Please try again.');
@@ -50,5 +55,51 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here */
+.login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  text-align: center;
+  margin-top: 10px;
+}
 </style>
