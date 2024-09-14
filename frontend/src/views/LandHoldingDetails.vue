@@ -44,9 +44,6 @@
       </div>
       <button type="submit" :disabled="!isFormValid">Update Land Holding</button>
     </form>
-    <div v-if="successMessage" class="success-message">
-      {{ successMessage }}
-    </div>
   </div>
 </template>
 
@@ -68,7 +65,6 @@ export default {
       isTownshipValid: true,
       isRangeValid: true,
       isFormValid: true,
-      successMessage: '', // Add successMessage data property
     };
   },
   created() {
@@ -128,17 +124,7 @@ export default {
         if (!response.ok) {
           throw new Error('Failed to update land holding');
         }
-
-        const ownerId = this.landHolding.ownerId;
-        if (ownerId) {
-          this.successMessage = `Land Holding for Owner ${ownerId} successfully updated!`;
-          setTimeout(() => {
-            this.$router.push(`/owner/${ownerId}`);
-          }, 1000); // Redirect after 1 second to show the message
-        } else {
-          console.error('Owner ID is not available in landHolding data');
-          alert('Unable to navigate to the owner page. Owner ID is missing.');
-        }
+        this.$router.push('/owner/${ownerId}');
       } catch (error) {
         console.error('Error updating land holding:', error);
         alert('Failed to update land holding.');
@@ -148,15 +134,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .error-message {
   color: red;
   font-size: 0.9em;
-}
-
-.success-message {
-  color: green;
-  font-size: 1em;
-  margin-top: 1em;
 }
 </style>
