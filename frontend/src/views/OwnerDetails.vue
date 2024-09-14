@@ -181,8 +181,117 @@ export default {
 </script>
 
 <style scoped>
+/* Container styling */
+.owner-details {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styling */
+h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #444;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* List styling */
+ul {
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #c82333;
+}
+
+/* Form styling */
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Error message styling */
 .error-message {
   color: red;
   font-size: 0.9em;
+  margin-top: 5px;
+}
+
+/* Button styling */
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+button[type="submit"]:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
 </style>
+

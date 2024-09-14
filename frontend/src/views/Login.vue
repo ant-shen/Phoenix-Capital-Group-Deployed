@@ -52,41 +52,59 @@ export default {
 <style scoped>
 .login {
   max-width: 400px;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
   background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  color: #333;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+  margin-top: 20px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+div {
+  margin-bottom: 15px;
 }
 
 label {
+  display: block;
+  font-weight: bold;
   margin-bottom: 5px;
 }
 
-input {
+input[type="email"],
+input[type="password"] {
+  width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 button {
-  padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 15px;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 16px;
+  width: 100%;
 }
 
 button:hover {
@@ -96,5 +114,14 @@ button:hover {
 p {
   text-align: center;
   margin-top: 10px;
+}
+
+router-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+router-link:hover {
+  text-decoration: underline;
 }
 </style>
