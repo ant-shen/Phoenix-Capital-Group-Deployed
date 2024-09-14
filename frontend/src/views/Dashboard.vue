@@ -1,60 +1,58 @@
 <template>
   <div class="dashboard">
-    <h1>Dashboard</h1>
-    
-    <!-- Display a message while data is loading -->
-    <div v-if="loading">Loading...</div>
-    
-    <!-- Display error message if there's an error fetching data -->
-    <div v-if="error">{{ error }}</div>
-    
-    <!-- Form to add/edit owners -->
-    <div v-if="isEditing">
-      <h2>{{ ownerId ? 'Edit Owner' : 'Add New Owner' }}</h2>
-      <form @submit.prevent="saveOwner">
-        <div>
-          <label for="ownerName">Owner Name:</label>
-          <input type="text" v-model="ownerName" required />
-        </div>
-        <div>
-          <label for="entityType">Entity Type:</label>
-          <select v-model="entityType">
-            <option value="Company">Company</option>
-            <option value="Individual">Individual</option>
-            <!-- Add more options as needed -->
-          </select>
-        </div>
-        <div>
-          <label for="ownerType">Owner Type:</label>
-          <select v-model="ownerType">
-            <option value="Competitor">Competitor</option>
-            <option value="Partner">Partner</option>
-            <!-- Add more options as needed -->
-          </select>
-        </div>
-        <div>
-          <label for="address">Address:</label>
-          <input type="text" v-model="address" />
-        </div>
-        <button type="submit">{{ isEditing ? 'Update Owner' : 'Add Owner' }}</button>
-        <button type="button" @click="cancelEdit">Cancel</button>
-      </form>
-    </div>
-    
-    <!-- List of owners -->
-    <div v-else>
-      <p v-if="!owners.length">No owners found.</p>
-      <ul v-else>
+    <h2>Dashboard</h2>
+    <button @click="logout">Logout</button>
+
+    <!-- Create/Update Owner Form -->
+    <form @submit.prevent="saveOwner">
+      <h3>{{ isEditing ? 'Update' : 'Create' }} Owner</h3>
+      <div>
+        <label for="ownerName">Owner Name:</label>
+        <input type="text" v-model="ownerName" required />
+      </div>
+      <div>
+        <label for="entityType">Entity Type:</label>
+        <select v-model="entityType" required>
+          <option value="Company">Company</option>
+          <option value="Individual">Individual</option>
+          <option value="Investor">Investor</option>
+          <option value="Trust">Trust</option>
+        </select>
+      </div>
+      <div>
+        <label for="ownerType">Owner Type:</label>
+        <select v-model="ownerType" required>
+          <option value="Competitor">Competitor</option>
+          <option value="Seller">Seller</option>
+          <option value="Investor">Investor</option>
+          <option value="Professional">Professional</option>
+        </select>
+      </div>
+      <div>
+        <label for="address">Address:</label>
+        <input type="text" v-model="address" required />
+      </div>
+      <button type="submit">{{ isEditing ? 'Update' : 'Create' }} Owner</button>
+      <button v-if="isEditing" @click="cancelEdit">Cancel</button>
+    </form>
+
+    <!-- Owners List -->
+    <div v-if="owners.length > 0">
+      <h3>Owners</h3>
+      <ul>
         <li v-for="owner in owners" :key="owner._id">
-          {{ owner.ownerName }}
+          <router-link :to="'/owner/' + owner._id">{{ owner.ownerName }}</router-link>
+          <!-- View Land Holdings Button -->
+          <router-link :to="'/landholdings/' + owner._id">
+            <button>View Land Holdings</button>
+          </router-link>
+          <!-- Edit Button -->
           <button @click="editOwner(owner)">Edit</button>
+          <!-- Delete Button -->
           <button @click="deleteOwner(owner._id)">Delete</button>
         </li>
       </ul>
     </div>
-
-    <!-- Logout button -->
-    <button @click="logout">Logout</button>
   </div>
 </template>
 
@@ -72,8 +70,6 @@ export default {
       ownerType: 'Competitor',
       address: '',
       isEditing: false, // Track if we are in edit mode
-      loading: true,    // Track loading state
-      error: null,      // Track error state
     };
   },
   async created() {
@@ -84,13 +80,9 @@ export default {
         },
       });
       this.owners = response.data;
-      console.log('Owners loaded:', this.owners);
     } catch (error) {
-      console.error('Failed to load owners:', error);
-      this.error = 'Failed to load owners. Please try again later.';
+      console.error('Failed to fetch owners:', error);
       this.$router.push('/');
-    } finally {
-      this.loading = false;
     }
   },
   methods: {
