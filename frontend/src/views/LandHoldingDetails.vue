@@ -124,7 +124,7 @@ export default {
         if (!response.ok) {
           throw new Error('Failed to update land holding');
         }
-        this.$router.push('/owners'  + owner._id);
+        this.$router.push('/owners/${this.landHolding.ownerId}');
       } catch (error) {
         console.error('Error updating land holding:', error);
         alert('Failed to update land holding.');
